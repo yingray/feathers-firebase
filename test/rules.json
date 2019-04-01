@@ -1,0 +1,33 @@
+{
+  "rules": {
+    "albums": {
+      "$user_id": {
+        "$album_key": {
+          ".validate": "newData.hasChildren()",
+          "id": {
+            ".validate": "newData.isString()"
+          },
+          "album_id": {
+            ".validate": "newData.isString()"
+          },
+          "album_name": {
+            ".validate": "newData.isString()"
+          },
+          "photos": {
+            "$photo_id": {
+              "photo_name": {
+                ".validate": "newData.isString()"
+              }
+            }
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        },
+        ".validate": "xxx",
+        ".read": "xxx",
+        ".indexOn": ["id", "album_id", "album_name"]
+      }
+    }
+  }
+}

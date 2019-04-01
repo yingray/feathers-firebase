@@ -1,0 +1,29 @@
+[
+  {
+    "id": "uiduiduida",
+    "albums": [
+      {
+        "id": "albums-uiduiduida-0001",
+        "album_id": "albums-uiduiduida-0001",
+        "album_name": "Hello, world",
+        "photos": [
+          {
+            "id": "photos-1",
+            "photo_name": "photos-1"
+          }
+        ]
+      },
+      {
+        "id": "albums-uiduiduida-0002",
+        "album_id": "albums-uiduiduida-0002",
+        "album_name": "Hello, world",
+        "photos": [
+          {
+            "id": "photos-1",
+            "photo_name": "photos-1"
+          }
+        ]
+      }
+    ]
+  }
+]

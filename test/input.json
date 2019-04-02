@@ -6,10 +6,12 @@
         "album_name": "Hello, world",
         "photos": {
           "photos-1": {
-            "photo_name": "photos-1"
+            "photo_name": "photos-1",
+            "photo_url": "http://aaa"
           },
           "photos-2": {
-            "photo_name": "photos-2"
+            "photo_name": "photos-2",
+            "photo_url": "http://bbb"
           }
         }
       },

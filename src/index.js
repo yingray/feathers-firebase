@@ -41,13 +41,38 @@ const getFeahtersArray = (data, rules = instance.rules) => {
   return a;
 };
 
-
 const getObj = (data, rules = instance.rules, prevName) => {
   const firstKey = Object.keys(rules)[0];
   if (firstKey.startsWith("$") && !firstKey.startsWith("$other")) {
+    console.log(firstKey, prevName);
+    if (prevName === "photos") {
+      // console.log(rules)
+      console.log(data);
+    }
+    if (prevName.startsWith("$") && !prevName.startsWith("$other")) {
+      return Object.entries(data).map(([k, v]) => ({
+        id: k,
+        ...getObj(v, rules[firstKey], firstKey)
+      }));
+    }
+    const nextRules = rules[firstKey];
+    const nextRulesFirstKey = Object.keys(nextRules)[0];
+    if(!nextRulesFirstKey.startsWith("$") || nextRulesFirstKey.startsWith("$other")) {
+      return Object.entries(data).map(([k, v]) => ({
+        id: k,
+        ...getObj(v, nextRules, firstKey)
+      }));
+    }
+    if (nextRules.hasOwnProperty(".validate") && Object.keys(nextRules).length <= 1) {
+      console.log( rules[firstKey])
+      return Object.entries(data).map(([k, v]) => ({
+        id: k,
+        ...getObj(v, nextRules, firstKey)
+      }));
+    }
     return Object.entries(data).map(([k, v]) => ({
       id: k,
-      [prevName]: getObj(v, rules[firstKey], k)
+      [prevName]: getObj(v, nextRules, firstKey)
     }));
   }
   if (rules.hasOwnProperty(".validate") && Object.keys(rules).length <= 1) {

@@ -17,6 +17,9 @@
             "$photo_id": {
               "photo_name": {
                 ".validate": "newData.isString()"
+              },
+              "photo_url": {
+                ".validate": "newData.isString()"
               }
             }
           },

@@ -1,4 +1,5 @@
 const assert = require('assert');
+const cj = require("color-json");
 const rules = require('./rules.json');
 const input = require('./input.json');
 const output = require('./output.json');
@@ -17,7 +18,7 @@ describe('Array', function() {
 
   describe('#indexOf()', function() {
     it('', function() {
-      console.log(JSON.stringify(feathersFirebase.getObj(input)))
+      console.log(cj(feathersFirebase.getObj(input)))
       // assert.equal(feathersFirebase.getFeahtersArray(rules, input), output);
     });
   });

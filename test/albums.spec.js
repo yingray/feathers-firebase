@@ -18,7 +18,7 @@ describe('Array', function() {
 
   describe('#indexOf()', function() {
     it('', function() {
-      console.log(cj(feathersFirebase.getObj(input)))
+      console.log(cj(feathersFirebase.toFeathersData(input)))
       // assert.equal(feathersFirebase.getFeahtersArray(rules, input), output);
     });
   });

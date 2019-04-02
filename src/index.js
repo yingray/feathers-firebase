@@ -1,93 +1,50 @@
 let instance = null;
 
-const toFeathersData = data => Object.keys(data).map(prop => getFeathersObject(data, prop));
+const toFeathersData = (data) => {
+  const checkRulesHaveArrayNext = rules => {
+    const firstKey = Object.keys(rules)[0];
+    return checkKeyHasArrayNext(firstKey);
+  };
 
-const getFeathersObject = (data, prop) => {
-  const { rules } = instance;
-  console.log(prop, rules.hasOwnProperty(prop));
-  if (rules.hasOwnProperty(prop)) {
-    const key = Object.keys(rules[prop])[0];
-    console.log(key);
-    console.log(key.startsWith("$") && !key.startsWith("$other"));
-    if (key.startsWith("$") && !key.startsWith("$other")) {
-      return getFeahtersArray(rules[prop], data[prop], key);
-    }
-  }
-  return rules;
-};
+  const checkKeyHasArrayNext = key => key.startsWith("$") && !key.startsWith("$other");
 
-let i = 0;
+  const checkRulesHavePureValueNext = rules => rules.hasOwnProperty(".validate") && Object.keys(rules).length <= 1;
 
-const getFeahtersArray = (data, rules = instance.rules) => {
-  console.log(i++, rules);
-  let a = Object.entries(data).map(([id, value]) => {
-    console.log(id);
-    if (rules.hasOwnProperty(id)) {
-      Object.keys(rules[id]).forEach(key => {
-        if (key.startsWith("$") && !key.startsWith("$other")) {
-          return {
-            id,
-            ...getFeahtersArray(data[key], rules[id])
-          };
-        }
-      });
-      return {
-        ...id,
-        value
-      };
-    }
-  });
-  // console.log(a)
-  return a;
-};
-
-const getObj = (data, rules = instance.rules, prevName) => {
-  const firstKey = Object.keys(rules)[0];
-  if (firstKey.startsWith("$") && !firstKey.startsWith("$other")) {
-    console.log(firstKey, prevName);
-    if (prevName === "photos") {
-      // console.log(rules)
-      console.log(data);
-    }
-    if (prevName.startsWith("$") && !prevName.startsWith("$other")) {
+  const getArray = (rules, data, prevName) => {
+    const firstKey = Object.keys(rules)[0];
+    const nextRules = rules[firstKey];
+    if (checkKeyHasArrayNext(prevName) || !checkRulesHaveArrayNext(nextRules)) {
       return Object.entries(data).map(([k, v]) => ({
         id: k,
         ...getObj(v, rules[firstKey], firstKey)
-      }));
-    }
-    const nextRules = rules[firstKey];
-    const nextRulesFirstKey = Object.keys(nextRules)[0];
-    if(!nextRulesFirstKey.startsWith("$") || nextRulesFirstKey.startsWith("$other")) {
-      return Object.entries(data).map(([k, v]) => ({
-        id: k,
-        ...getObj(v, nextRules, firstKey)
-      }));
-    }
-    if (nextRules.hasOwnProperty(".validate") && Object.keys(nextRules).length <= 1) {
-      console.log( rules[firstKey])
-      return Object.entries(data).map(([k, v]) => ({
-        id: k,
-        ...getObj(v, nextRules, firstKey)
       }));
     }
     return Object.entries(data).map(([k, v]) => ({
       id: k,
       [prevName]: getObj(v, nextRules, firstKey)
     }));
-  }
-  if (rules.hasOwnProperty(".validate") && Object.keys(rules).length <= 1) {
-    return data;
-  }
-  const obj = {};
-  Object.entries(rules).map(([k, v]) => {
-    if (data.hasOwnProperty(k)) {
-      obj[k] = getObj(data[k], v, k);
+  };
+
+  const getObj = (data, rules = instance.rules, prevName) => {
+    if (checkRulesHaveArrayNext(rules)) {
+      return getArray(rules, data, prevName);
     }
-  });
-  return obj;
+    if (checkRulesHavePureValueNext(rules)) {
+      return data;
+    }
+    const obj = {};
+    Object.entries(rules).map(([k, v]) => {
+      if (data.hasOwnProperty(k)) {
+        obj[k] = getObj(data[k], v, k);
+      }
+    });
+    return obj;
+  };
+
+  return getObj(data)
 };
 
-const toFirebaseData = data => {};
+const toFirebaseData = () => {};
 
 module.exports = {
   init: rules => {
@@ -97,8 +54,4 @@ module.exports = {
   },
   toFeathersData,
   toFirebaseData,
-  getFeathersObject,
-  getFeahtersArray,
-  // getArray,
-  getObj
 };
